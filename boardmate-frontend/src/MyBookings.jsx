@@ -177,11 +177,31 @@ export default function MyBookings({ bookings }) {
                       <td className="px-6 py-5">
                         {renderStatus(booking.status)}
                       </td>
-                      <td className="px-6 py-5 text-right">
-                        <button className="text-[#047857] font-semibold text-[13px] flex items-center justify-end gap-1 hover:underline ml-auto">
-                          View Details <ChevronRight className="w-4 h-4" />
-                        </button>
-                      </td>
+                     <td className="px-6 py-5 text-right">
+  {/* Dynamic Action Buttons based on Status */}
+  {booking.status === 'Confirmed' || booking.status === 'Completed' ? (
+    <button 
+      onClick={() => navigate('/viewing-appointments')}
+      className="text-[#047857] font-semibold text-[13px] flex items-center justify-end gap-1 hover:underline ml-auto transition-colors"
+    >
+      View Details <ChevronRight className="w-4 h-4" />
+    </button>
+  ) : booking.status === 'Pending' ? (
+    <button 
+      onClick={() => navigate('/request-booking')} // Or a specific request details route
+      className="text-[#047857] font-semibold text-[13px] flex items-center justify-end gap-1 hover:underline ml-auto transition-colors"
+    >
+      View Request <ChevronRight className="w-4 h-4" />
+    </button>
+  ) : booking.status === 'Cancelled' || booking.status === 'Rejected' ? (
+    <button 
+      onClick={() => alert('Moved to Archive!')}
+      className="text-gray-500 hover:text-gray-900 font-semibold text-[13px] flex items-center justify-end gap-1 hover:underline ml-auto transition-colors"
+    >
+      Move to Archive
+    </button>
+  ) : null}
+</td>
                     </tr>
                   ))}
                   {bookings.length === 0 && (
