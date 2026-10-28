@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 function ReviewPage() {
   const navigate = useNavigate();
   
-  // State for Review Form
+  
   const [property, setProperty] = useState("Green View Residence");
   const [ratings, setRatings] = useState({
     cleanliness: 0, safety: 0, location: 0, facilities: 0, value: 0, owner: 0
