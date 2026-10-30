@@ -23,7 +23,7 @@ const colors = [
   { name: 'line', className: 'bg-line text-ink' },
 ]
 
-function ColorTest() {
+function ComponentShowcase() {
     const [modalOpen, setModalOpen] = useState(false)
     const [confirmOpen, setConfirmOpen] = useState(false)
   return (
@@ -31,9 +31,9 @@ function ColorTest() {
       <p className="text-xs font-semibold uppercase tracking-wide text-primary">
         Design tokens
       </p>
-      <h1 className="text-3xl font-bold">BoardMate colour test</h1>
+      <h1 className="text-3xl font-bold">BoardMate component showcase</h1>
       <p className="mt-1 text-muted">
-        Temporary page to check fonts, colours, radii and shadows.
+        Reference page for the shared design tokens and components. Visible in development only.
       </p>
 
       <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -132,4 +132,4 @@ function ColorTest() {
   )
 }
 
-export default ColorTest
+export default ComponentShowcase

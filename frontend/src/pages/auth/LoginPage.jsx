@@ -2,7 +2,7 @@ import { Eye } from 'lucide-react'
 import Input from '../../components/common/Input'
 import Button from '../../components/common/Button'
 
-function AuthTest() {
+function LoginPage() {
   return (
     <div>
       <h1 className="text-2xl font-bold">Welcome back</h1>
@@ -24,4 +24,4 @@ function AuthTest() {
   )
 }
 
-export default AuthTest
+export default LoginPage

@@ -1,53 +1,57 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import ColorTest from './pages/home/ColorTest'
-import PublicTest from './pages/home/PublicTest'
-import PagePlaceholder from './pages/home/PagePlaceholder'
-import AuthTest from './pages/home/AuthTest'
+
 import PublicLayout from './layouts/PublicLayout'
 import AuthLayout from './layouts/AuthLayout'
 import StudentLayout from './layouts/StudentLayout'
 import OwnerLayout from './layouts/OwnerLayout'
 import AdminLayout from './layouts/AdminLayout'
 
-function Home() {
-  return (
-    <div className="mx-auto max-w-7xl p-8">
-      <h1 className="text-3xl font-bold">Welcome to BoardMate</h1>
-    </div>
-  )
-}
+import { publicRoutes } from './routes/publicRoutes'
+import { authRoutes } from './routes/authRoutes'
+import { studentRoutes } from './routes/studentRoutes'
+import { ownerRoutes } from './routes/ownerRoutes'
+import { adminRoutes } from './routes/adminRoutes'
+
+// Temporary test pages (removed in the next step)
+import ComponentShowcase from './pages/dev/ComponentShowcase'
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/test" element={<ColorTest />} />
-        <Route path="/public-test" element={<PublicTest />} />
+        {import.meta.env.DEV && (
+  <Route path="/dev/components" element={<ComponentShowcase />} />
+)}
+        
 
         <Route element={<PublicLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/properties" element={<PagePlaceholder />} />
-          <Route path="/how-it-works" element={<PagePlaceholder />} />
-          <Route path="/about" element={<PagePlaceholder />} />
-          <Route path="/faq" element={<PagePlaceholder />} />
-          <Route path="/contact" element={<PagePlaceholder />} />
+          {publicRoutes.map((r) => (
+            <Route key={r.path} {...r} />
+          ))}
         </Route>
 
         <Route element={<AuthLayout />}>
-          <Route path="/login" element={<AuthTest />} />
-          <Route path="/signup" element={<AuthTest />} />
+          {authRoutes.map((r) => (
+            <Route key={r.path} {...r} />
+          ))}
         </Route>
 
         <Route path="/student" element={<StudentLayout />}>
-          <Route path="*" element={<PagePlaceholder />} />
+          {studentRoutes.map((r) => (
+            <Route key={r.path ?? 'index'} {...r} />
+          ))}
         </Route>
 
         <Route path="/owner" element={<OwnerLayout />}>
-          <Route path="*" element={<PagePlaceholder />} />
+          {ownerRoutes.map((r) => (
+            <Route key={r.path ?? 'index'} {...r} />
+          ))}
         </Route>
 
         <Route path="/admin" element={<AdminLayout />}>
-          <Route path="*" element={<PagePlaceholder />} />
+          {adminRoutes.map((r) => (
+            <Route key={r.path ?? 'index'} {...r} />
+          ))}
         </Route>
       </Routes>
     </BrowserRouter>
