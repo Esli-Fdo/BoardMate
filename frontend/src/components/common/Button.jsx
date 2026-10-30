@@ -14,26 +14,30 @@ const sizes = {
 }
 
 function Button({
+  as: Component = 'button',
   variant = 'primary',
   size = 'md',
   leftIcon: LeftIcon,
   rightIcon: RightIcon,
   fullWidth = false,
-  type = 'button',
+  type,
   className = '',
   children,
   ...props
 }) {
+  // Only real <button> elements get a "type" attribute
+  const typeProps = Component === 'button' ? { type: type ?? 'button' } : {}
+
   return (
-    <button
-      type={type}
+    <Component
+      {...typeProps}
       className={`inline-flex items-center justify-center gap-2 rounded-control font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${variants[variant]} ${sizes[size]} ${fullWidth ? 'w-full' : ''} ${className}`}
       {...props}
     >
       {LeftIcon && <LeftIcon size={16} />}
       {children}
       {RightIcon && <RightIcon size={16} />}
-    </button>
+    </Component>
   )
 }
 

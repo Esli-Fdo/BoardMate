@@ -53,3 +53,12 @@ export const adminMenu = [
   { label: 'Analytics', to: '/admin/analytics', icon: TrendingUp },
   { label: 'System', to: '/admin/system', icon: Settings },
 ]
+
+export const publicMenu = [
+  { label: 'Home', to: '/', end: true },
+  { label: 'Properties', to: '/properties' },
+  { label: 'How it works', to: '/how-it-works' },
+  { label: 'About', to: '/about' },
+  { label: 'FAQ', to: '/faq' },
+  { label: 'Contact', to: '/contact' },
+]
