@@ -1,3 +1,13 @@
+
+import Button from '../../components/common/Button'
+import Badge from '../../components/common/Badge'
+import Card from '../../components/common/Card'
+import { Plus, Search, ArrowRight, Mail, Eye } from 'lucide-react'
+import Input from '../../components/common/Input'
+import { useState } from 'react'
+import Modal from '../../components/common/Modal'
+import ConfirmDialog from '../../components/common/ConfirmDialog'
+
 const colors = [
   { name: 'primary', className: 'bg-primary text-white' },
   { name: 'primary-dark', className: 'bg-primary-dark text-white' },
@@ -14,6 +24,8 @@ const colors = [
 ]
 
 function ColorTest() {
+    const [modalOpen, setModalOpen] = useState(false)
+    const [confirmOpen, setConfirmOpen] = useState(false)
   return (
     <div className="mx-auto max-w-5xl p-8">
       <p className="text-xs font-semibold uppercase tracking-wide text-primary">
@@ -47,6 +59,75 @@ function ColorTest() {
           </span>
         </div>
       </div>
+            <div className="mt-8 rounded-card bg-white p-6 shadow-card">
+        <h2 className="text-lg font-semibold">Buttons</h2>
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <Button>Sign Up</Button>
+          <Button variant="dark">Approve</Button>
+          <Button variant="secondary">Reject</Button>
+          <Button variant="outline">Contact Landlord</Button>
+          <Button variant="ghost" rightIcon={ArrowRight}>View All</Button>
+          <Button variant="danger">Delete</Button>
+          <Button leftIcon={Plus}>Add New Property</Button>
+          <Button leftIcon={Search} size="lg">Search</Button>
+          <Button size="sm">Small</Button>
+          <Button disabled>Disabled</Button>
+        </div>
+      </div>
+            <Card className="mt-8">
+        <h2 className="text-lg font-semibold">Badges and Card</h2>
+        <p className="mt-1 text-muted">This box is the shared Card component.</p>
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <Badge>Verified</Badge>
+          <Badge variant="warning" dot>Pending</Badge>
+          <Badge variant="danger" dot>High priority</Badge>
+          <Badge variant="neutral">Replied</Badge>
+          <Badge dot>Confirmed Appointment</Badge>
+        </div>
+      </Card>
+            <Card className="mt-8">
+        <h2 className="text-lg font-semibold">Inputs</h2>
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          <Input label="Email address" type="email" placeholder="you@example.com" leftIcon={Mail} />
+          <Input label="Password" type="password" placeholder="Enter your password" rightElement={<Eye size={18} />} />
+          <Input leftIcon={Search} placeholder="Search properties, campuses, landlords..." />
+          <Input label="With error" defaultValue="abc" error="Please enter a valid email" />
+          <Input label="With hint" placeholder="Rs." hint="Monthly rent in rupees" />
+          <Input label="Disabled" placeholder="Cannot edit" disabled />
+        </div>
+      </Card>
+            <Card className="mt-8">
+        <h2 className="text-lg font-semibold">Modal and ConfirmDialog</h2>
+        <div className="mt-4 flex gap-3">
+          <Button onClick={() => setModalOpen(true)}>Open Modal</Button>
+          <Button variant="danger" onClick={() => setConfirmOpen(true)}>
+            Open Confirm Dialog
+          </Button>
+        </div>
+      </Card>
+
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title="Request Booking"
+        footer={
+          <>
+            <Button variant="outline" onClick={() => setModalOpen(false)}>Cancel</Button>
+            <Button onClick={() => setModalOpen(false)}>Submit</Button>
+          </>
+        }
+      >
+        <Input label="Full name" placeholder="Piyu Hansi" />
+      </Modal>
+
+      <ConfirmDialog
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={() => setConfirmOpen(false)}
+        title="Reject this request?"
+        message="The student will be notified that their request was declined."
+        confirmLabel="Reject"
+      />
     </div>
   )
 }
