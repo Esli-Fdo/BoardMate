@@ -1,7 +1,16 @@
 import { useState } from 'react'
-import { MapPin, Star, Heart, Check, Zap } from 'lucide-react'
+import { MapPin, Star, Heart, Check, Zap, Sparkles } from 'lucide-react'
 
-function AccommodationCard({ property, isFavorite, onToggleFavorite, onViewDetails }) {
+function AccommodationCard({
+  property,
+  isFavorite,
+  onToggleFavorite,
+  onViewDetails,
+  isCompared = false,
+  onToggleCompare,
+  showCompare = true,
+  buttonVariant = 'primary',
+}) {
   const [imageError, setImageError] = useState(false)
 
   const fallbackImage =
@@ -19,24 +28,38 @@ function AccommodationCard({ property, isFavorite, onToggleFavorite, onViewDetai
           loading="lazy"
         />
 
-        {/* Floating Badges */}
+        {/* Floating Badges (Top Left) */}
         <div className="absolute left-3 top-3 flex flex-wrap items-center gap-1.5">
           {property.verifiedType && (
-            <span className="flex items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-[11px] font-medium text-white shadow-xs">
+            <span className="flex items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-[11px] font-semibold text-white shadow-xs">
               <Check size={12} strokeWidth={3} />
               <span>{property.verifiedType}</span>
             </span>
           )}
 
-          {property.instantBooking && (
-            <span className="flex items-center gap-1 rounded-full bg-blue-600 px-2.5 py-1 text-[11px] font-medium text-white shadow-xs">
+          {property.secondaryBadge === 'Instant Booking' && (
+            <span className="flex items-center gap-1 rounded-full bg-teal-700 px-2.5 py-1 text-[11px] font-semibold text-white shadow-xs">
+              <Zap size={11} className="fill-white" />
+              <span>Instant Booking</span>
+            </span>
+          )}
+
+          {property.secondaryBadge === 'Popular Choice' && (
+            <span className="flex items-center gap-1 rounded-full bg-blue-600 px-2.5 py-1 text-[11px] font-semibold text-white shadow-xs">
+              <Sparkles size={11} className="fill-white" />
+              <span>Popular Choice</span>
+            </span>
+          )}
+
+          {!property.secondaryBadge && property.instantBooking && (
+            <span className="flex items-center gap-1 rounded-full bg-teal-700 px-2.5 py-1 text-[11px] font-semibold text-white shadow-xs">
               <Zap size={11} className="fill-white" />
               <span>Instant Booking</span>
             </span>
           )}
         </div>
 
-        {/* Favorite Heart Button */}
+        {/* Favorite Heart Button (Top Right) */}
         <button
           type="button"
           aria-label={isFavorite ? 'Remove from favorites' : 'Save to favorites'}
@@ -55,6 +78,22 @@ function AccommodationCard({ property, isFavorite, onToggleFavorite, onViewDetai
             }
           />
         </button>
+
+        {/* Compare Checkbox Badge (Bottom Left) */}
+        {showCompare && (
+          <label
+            onClick={(e) => e.stopPropagation()}
+            className="absolute bottom-2.5 left-2.5 flex cursor-pointer items-center gap-1.5 rounded-md bg-black/60 px-2 py-1 text-[11px] font-medium text-white backdrop-blur-xs transition-colors hover:bg-black/80"
+          >
+            <input
+              type="checkbox"
+              checked={isCompared}
+              onChange={() => onToggleCompare?.(property.id)}
+              className="h-3.5 w-3.5 cursor-pointer rounded border-white/50 accent-primary"
+            />
+            <span>Compare</span>
+          </label>
+        )}
       </div>
 
       {/* Card Content */}
@@ -95,23 +134,27 @@ function AccommodationCard({ property, isFavorite, onToggleFavorite, onViewDetai
           ))}
         </div>
 
-        {/* Footer: Rent & View Details */}
+        {/* Footer: Rent, Deposit & View Details */}
         <div className="mt-auto pt-4">
           <div className="flex items-center justify-between border-t border-line/70 pt-3">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted">
-                Monthly Rent
-              </p>
-              <p className="text-base font-bold text-primary md:text-lg">
+              <p className="text-base font-bold text-ink md:text-lg">
                 Rs. {property.rent.toLocaleString()}{' '}
-                <span className="text-xs font-normal text-muted">/ mo</span>
+                <span className="text-xs font-normal text-muted">/ month</span>
+              </p>
+              <p className="text-[11px] text-muted">
+                {property.deposit || 'Deposit: 1 Month Rent'}
               </p>
             </div>
 
             <button
               type="button"
               onClick={() => onViewDetails(property)}
-              className="inline-flex items-center justify-center rounded-control border border-primary px-3.5 py-1.5 text-xs font-semibold text-primary transition-colors hover:bg-primary hover:text-white"
+              className={`inline-flex items-center justify-center rounded-control px-4 py-2 text-xs font-semibold transition-colors ${
+                buttonVariant === 'primary'
+                  ? 'bg-primary text-white shadow-xs hover:bg-primary-dark'
+                  : 'border border-primary text-primary hover:bg-primary hover:text-white'
+              }`}
             >
               View Details
             </button>
@@ -123,4 +166,3 @@ function AccommodationCard({ property, isFavorite, onToggleFavorite, onViewDetai
 }
 
 export default AccommodationCard
-
