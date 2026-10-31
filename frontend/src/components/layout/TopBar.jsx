@@ -1,15 +1,30 @@
+import { useLocation } from 'react-router-dom'
 import { Bell, Search, User } from 'lucide-react'
 import Input from '../common/Input'
 
-function TopBar({ user, searchPlaceholder = 'Search...', hasNotifications = false }) {
+function TopBar({
+  user,
+  searchPlaceholder = 'Search...',
+  hasNotifications = false,
+  showSearch = true,
+}) {
+  const location = useLocation()
+  const isSmartSearchPage =
+    location.pathname.replace(/\/$/, '') === '/student/properties'
+  const shouldRenderSearch = showSearch && !isSmartSearchPage
+
   return (
     <header className="flex h-16 shrink-0 items-center justify-between gap-4 border-b border-line bg-white px-6">
-      <Input
-        className="w-full max-w-md"
-        leftIcon={Search}
-        placeholder={searchPlaceholder}
-        aria-label="Search"
-      />
+      {shouldRenderSearch ? (
+        <Input
+          className="w-full max-w-md"
+          leftIcon={Search}
+          placeholder={searchPlaceholder}
+          aria-label="Search"
+        />
+      ) : (
+        <div className="flex-1" />
+      )}
 
       <div className="flex items-center gap-5">
         <button

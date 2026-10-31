@@ -2,7 +2,13 @@ import { Outlet } from 'react-router-dom'
 import Sidebar from '../components/layout/Sidebar'
 import TopBar from '../components/layout/TopBar'
 
-function DashboardLayout({ sidebar, user, searchPlaceholder, hasNotifications }) {
+function DashboardLayout({
+  sidebar,
+  user,
+  searchPlaceholder,
+  hasNotifications,
+  showSearch,
+}) {
   return (
     <div className="flex h-screen bg-page">
       <Sidebar {...sidebar} />
@@ -12,6 +18,7 @@ function DashboardLayout({ sidebar, user, searchPlaceholder, hasNotifications })
           user={user}
           searchPlaceholder={searchPlaceholder}
           hasNotifications={hasNotifications}
+          showSearch={showSearch}
         />
         <main className="flex-1 overflow-y-auto p-8">
           <Outlet />
