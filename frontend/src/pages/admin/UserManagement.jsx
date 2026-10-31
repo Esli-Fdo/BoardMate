@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import {
   Download,
   UserPlus,
@@ -24,8 +24,6 @@ import { exportToCsv } from '../../utils/exportCsv'
  * Route: /admin/users
  */
 function UserManagement() {
-  const navigate = useNavigate()
-
   // State
   const [users, setUsers] = useState(initialUsersList)
   const [activeTab, setActiveTab] = useState('all') // 'all' | 'students' | 'owners' | 'suspended'
@@ -160,10 +158,11 @@ function UserManagement() {
           </Button>
 
           <Button
+            as={Link}
+            to="/admin/users/add-student"
             variant="dark"
             size="md"
             leftIcon={UserPlus}
-            onClick={() => navigate('/admin/users/add-student')}
           >
             + Add User
           </Button>
