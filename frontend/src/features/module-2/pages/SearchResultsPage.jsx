@@ -19,7 +19,6 @@ import {
 } from 'lucide-react'
 
 import AccommodationCard from '../components/AccommodationCard'
-import PropertyDetailModal from '../components/PropertyDetailModal'
 import {
   sampleAccommodations,
   roomTypeOptions,
@@ -44,7 +43,6 @@ function SearchResultsPage() {
   // Sorting & Interaction States
   const [sortBy, setSortBy] = useState('recommended')
   const [favorites, setFavorites] = useState(new Set(['prop-1', 'prop-3']))
-  const [selectedProperty, setSelectedProperty] = useState(null)
   const [selectedCompareIds, setSelectedCompareIds] = useState(
     new Set(['prop-1', 'prop-2']),
   )
@@ -663,7 +661,9 @@ function SearchResultsPage() {
             <button
               type="button"
               aria-label="Map view"
-              onClick={() => setViewMode('map')}
+              onClick={() => {
+                navigate('/student/map-view', { state: { filters } })
+              }}
               className={`rounded p-1.5 transition-colors ${
                 viewMode === 'map'
                   ? 'bg-primary-soft text-primary'
@@ -685,7 +685,11 @@ function SearchResultsPage() {
               property={property}
               isFavorite={favorites.has(property.id)}
               onToggleFavorite={handleToggleFavorite}
-              onViewDetails={setSelectedProperty}
+              onViewDetails={(prop) => {
+                navigate(`/student/property-details/${prop.id}`, {
+                  state: { property: prop, filters },
+                })
+              }}
               isCompared={selectedCompareIds.has(property.id)}
               onToggleCompare={handleToggleCompare}
               showCompare={true}
@@ -779,13 +783,6 @@ function SearchResultsPage() {
           </div>
         </div>
       )}
-
-      {/* Property Details Modal */}
-      <PropertyDetailModal
-        property={selectedProperty}
-        open={Boolean(selectedProperty)}
-        onClose={() => setSelectedProperty(null)}
-      />
     </div>
   )
 }

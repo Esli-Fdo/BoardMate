@@ -10,7 +10,6 @@ import {
 
 import FilterSection from '../components/FilterSection'
 import AccommodationCard from '../components/AccommodationCard'
-import PropertyDetailModal from '../components/PropertyDetailModal'
 import { sampleAccommodations } from '../data/sampleAccommodations'
 
 const initialFilters = {
@@ -45,7 +44,6 @@ function SmartSearchPage() {
   const [favorites, setFavorites] = useState(
     new Set(['prop-1', 'prop-3'])
   )
-  const [selectedProperty, setSelectedProperty] = useState(null)
   const [showRecentlyViewed, setShowRecentlyViewed] = useState(false)
 
   // Handle filter changes
@@ -240,7 +238,11 @@ function SmartSearchPage() {
               property={property}
               isFavorite={favorites.has(property.id)}
               onToggleFavorite={handleToggleFavorite}
-              onViewDetails={setSelectedProperty}
+              onViewDetails={(prop) => {
+                navigate(`/student/property-details/${prop.id}`, {
+                  state: { property: prop, filters },
+                })
+              }}
             />
           ))}
 
@@ -274,13 +276,6 @@ function SmartSearchPage() {
 
         </div>
       )}
-
-      {/* Property Details Modal */}
-      <PropertyDetailModal
-        property={selectedProperty}
-        open={Boolean(selectedProperty)}
-        onClose={() => setSelectedProperty(null)}
-      />
 
     </div>
   )

@@ -1,14 +1,33 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { Home, LifeBuoy, LogOut } from 'lucide-react'
 
-const linkClass = ({ isActive }) =>
-  `flex items-center gap-3 rounded-control px-3 py-2.5 text-sm transition-colors ${
-    isActive
-      ? 'bg-primary-soft font-medium text-primary'
-      : 'text-muted hover:bg-page hover:text-ink'
-  }`
-
 function Sidebar({ subtitle, sectionLabel, items, helpTo, helpLabel = 'Help Centre', onLogout }) {
+  const location = useLocation()
+  const currentPath = location.pathname.replace(/\/$/, '')
+
+  const isItemActive = (to, navLinkIsActive) => {
+    if (navLinkIsActive) return true
+
+    // Highlight "Properties" on property details, map view, and search results
+    if (to === '/student/properties') {
+      return (
+        currentPath.startsWith('/student/properties') ||
+        currentPath.startsWith('/student/property-details') ||
+        currentPath.startsWith('/student/map-view') ||
+        currentPath.startsWith('/student/search-results')
+      )
+    }
+
+    if (to === '/owner/properties') {
+      return (
+        currentPath.startsWith('/owner/properties') ||
+        currentPath.startsWith('/owner/property-details')
+      )
+    }
+
+    return false
+  }
+
   return (
     <aside className="flex h-full w-64 shrink-0 flex-col border-r border-line bg-white">
       <div className="flex items-center gap-3 p-4">
@@ -28,11 +47,37 @@ function Sidebar({ subtitle, sectionLabel, items, helpTo, helpLabel = 'Help Cent
           </p>
         )}
         <ul className="space-y-1">
-          {items.map(({ label, to, icon: Icon }) => (
+          {items.map(({ label, to, icon: Icon, aliases }) => (
             <li key={to}>
-              <NavLink to={to} className={linkClass}>
-                <Icon size={18} />
-                {label}
+              <NavLink
+                to={to}
+                className={({ isActive }) => {
+                  const active =
+                    isItemActive(to, isActive) ||
+                    (aliases && aliases.some((pattern) => currentPath.startsWith(pattern)))
+                  return `flex items-center justify-between rounded-control px-3 py-2.5 text-sm transition-colors ${
+                    active
+                      ? 'bg-primary-soft font-medium text-primary'
+                      : 'text-muted hover:bg-page hover:text-ink'
+                  }`
+                }}
+              >
+                {({ isActive }) => {
+                  const active =
+                    isItemActive(to, isActive) ||
+                    (aliases && aliases.some((pattern) => currentPath.startsWith(pattern)))
+                  return (
+                    <>
+                      <div className="flex items-center gap-3">
+                        <Icon size={18} />
+                        <span>{label}</span>
+                      </div>
+                      {active && (
+                        <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
+                      )}
+                    </>
+                  )
+                }}
               </NavLink>
             </li>
           ))}
@@ -42,7 +87,16 @@ function Sidebar({ subtitle, sectionLabel, items, helpTo, helpLabel = 'Help Cent
       {(helpTo || onLogout) && (
         <div className="space-y-1 border-t border-line p-3">
           {helpTo && (
-            <NavLink to={helpTo} className={linkClass}>
+            <NavLink
+              to={helpTo}
+              className={({ isActive }) =>
+                `flex items-center gap-3 rounded-control px-3 py-2.5 text-sm transition-colors ${
+                  isActive
+                    ? 'bg-primary-soft font-medium text-primary'
+                    : 'text-muted hover:bg-page hover:text-ink'
+                }`
+              }
+            >
               <LifeBuoy size={18} />
               {helpLabel}
             </NavLink>
