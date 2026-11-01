@@ -96,7 +96,7 @@ function RegisterPage() {
     setTimeout(() => {
       setIsSubmitting(false)
       // Navigate to planned OTP verification route with registration context
-      navigate('/verify-otp', {
+      navigate('/verify-account', {
         state: {
           email,
           fullName,
