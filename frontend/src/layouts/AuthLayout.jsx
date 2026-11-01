@@ -23,11 +23,12 @@ function AuthLayout() {
             </Link>
 
             <div className="mt-8">
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-primary">
-                <Home size={14} className="fill-current" />
-                <span>BoardMate</span>
-              </div>
-              <p className="mt-1 text-xs text-muted">Better Homes. Brighter Futures.</p>
+              <h2 className="text-xl font-bold tracking-tight text-ink">
+                Better Homes, Brighter Futures.
+              </h2>
+              <p className="mt-2 text-xs leading-relaxed text-muted">
+                Connecting students with verified, secure, and affordable boardings near campuses.
+              </p>
             </div>
 
             <div className="mt-6 overflow-hidden rounded-2xl shadow-xs">
