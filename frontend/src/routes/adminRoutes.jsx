@@ -3,6 +3,7 @@ import PagePlaceholder from '../pages/home/PagePlaceholder'
 import AdminDashboard from '../pages/admin/AdminDashboard'
 import UserManagement from '../pages/admin/UserManagement'
 import AddUserPage from '../pages/admin/AddUserPage'
+import PropertiesManagement from '../pages/admin/PropertiesManagement'
 
 // Pages shown inside AdminLayout. Paths are relative to /admin
 export const adminRoutes = [
@@ -12,7 +13,7 @@ export const adminRoutes = [
   { path: 'users/add-student', element: <AddUserPage initialRole="student" /> },
   { path: 'users/add-owner', element: <AddUserPage initialRole="owner" /> },
   { path: 'verifications', element: <PagePlaceholder /> },
-  { path: 'properties', element: <PagePlaceholder /> },
+  { path: 'properties', element: <PropertiesManagement /> },
   { path: 'bookings', element: <PagePlaceholder /> },
   { path: 'reports', element: <PagePlaceholder /> },
   { path: 'payments', element: <PagePlaceholder /> },
