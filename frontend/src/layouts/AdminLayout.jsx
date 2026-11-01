@@ -2,7 +2,12 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import DashboardLayout from './DashboardLayout'
 import { adminMenu } from '../utils/navigation'
 
-const pagesWithOwnSearch = ['/admin/users', '/admin/properties', '/admin/bookings']
+const pagesWithOwnSearch = [
+  '/admin/users',
+  '/admin/properties',
+  '/admin/bookings',
+  '/admin/verifications',
+]
 
 function AdminLayout() {
   const navigate = useNavigate()

@@ -5,6 +5,7 @@ import UserManagement from '../pages/admin/UserManagement'
 import AddUserPage from '../pages/admin/AddUserPage'
 import PropertiesManagement from '../pages/admin/PropertiesManagement'
 import BookingsManagement from '../pages/admin/BookingsManagement'
+import VerificationQueue from '../pages/admin/VerificationQueue'
 
 // Pages shown inside AdminLayout. Paths are relative to /admin
 export const adminRoutes = [
@@ -13,7 +14,7 @@ export const adminRoutes = [
   { path: 'users', element: <UserManagement /> },
   { path: 'users/add-student', element: <AddUserPage initialRole="student" /> },
   { path: 'users/add-owner', element: <AddUserPage initialRole="owner" /> },
-  { path: 'verifications', element: <PagePlaceholder /> },
+  { path: 'verifications', element: <VerificationQueue /> },
   { path: 'properties', element: <PropertiesManagement /> },
   { path: 'bookings', element: <BookingsManagement /> },
   { path: 'reports', element: <PagePlaceholder /> },
