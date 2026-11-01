@@ -1,16 +1,26 @@
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   ChevronRight,
   ArrowUpDown,
   Home,
   RotateCcw,
+  Scale,
+  CheckCircle2,
+  AlertCircle,
 } from 'lucide-react'
 
 import FilterSection from '../components/FilterSection'
 import AccommodationCard from '../components/AccommodationCard'
 import { sampleAccommodations } from '../data/sampleAccommodations'
+import { filterAccommodations } from '../utils/accommodationFilters'
+import {
+  getCompareIds,
+  toggleCompareId,
+  getFavorites,
+  toggleFavorite,
+} from '../utils/storageService'
 
 const initialFilters = {
   university: 'University of Moratuwa (UoM)',
@@ -41,10 +51,29 @@ function SmartSearchPage() {
 
   const [filters, setFilters] = useState(initialFilters)
   const [sortBy, setSortBy] = useState('recommended')
-  const [favorites, setFavorites] = useState(
-    new Set(['prop-1', 'prop-3'])
-  )
+  const [favorites, setFavorites] = useState(getFavorites)
+  const [compareIds, setCompareIds] = useState(getCompareIds)
   const [showRecentlyViewed, setShowRecentlyViewed] = useState(false)
+  const [toastMessage, setToastMessage] = useState(null)
+
+  const triggerToast = (msg, isError = false) => {
+    setToastMessage({ text: msg, isError })
+    setTimeout(() => setToastMessage(null), 3200)
+  }
+
+  // Synchronize across storage updates
+  useEffect(() => {
+    const handleStorageUpdate = (e) => {
+      if (e.detail?.key === 'boardmate_compare_ids') {
+        setCompareIds(e.detail.value)
+      }
+      if (e.detail?.key === 'boardmate_favorite_ids') {
+        setFavorites(e.detail.value)
+      }
+    }
+    window.addEventListener('boardmate_storage_update', handleStorageUpdate)
+    return () => window.removeEventListener('boardmate_storage_update', handleStorageUpdate)
+  }, [])
 
   // Handle filter changes
   const handleFilterChange = (field, value) => {
@@ -90,24 +119,35 @@ function SmartSearchPage() {
 
   // Handle favourite properties
   const handleToggleFavorite = (propertyId) => {
-    setFavorites((prev) => {
-      const updated = new Set(prev)
-
-      if (updated.has(propertyId)) {
-        updated.delete(propertyId)
-      } else {
-        updated.add(propertyId)
-      }
-
-      return updated
-    })
+    const updated = toggleFavorite(propertyId)
+    setFavorites(updated)
+    triggerToast(
+      updated.includes(propertyId)
+        ? 'Saved to favourites.'
+        : 'Removed from favourites.'
+    )
   }
 
-  // Display all properties without applying filters on this page
-  const displayedAccommodations = useMemo(() => {
-    let properties = [...sampleAccommodations]
+  // Handle compare properties
+  const handleToggleCompare = (propertyId) => {
+    const res = toggleCompareId(propertyId)
+    if (res.success) {
+      setCompareIds(getCompareIds())
+      triggerToast(
+        res.action === 'removed'
+          ? 'Removed from comparison list.'
+          : 'Added to comparison list.'
+      )
+    } else {
+      triggerToast(res.message, true)
+    }
+  }
 
-    // Demo recently viewed section
+  // Filter accommodations according to user's selections
+  const displayedAccommodations = useMemo(() => {
+    let properties = filterAccommodations(sampleAccommodations, filters)
+
+    // Demo recently viewed section toggle
     if (showRecentlyViewed) {
       properties = properties.slice(0, 3)
     }
@@ -118,7 +158,7 @@ function SmartSearchPage() {
     }
 
     // Sort properties according to selected option
-    return properties.sort((a, b) => {
+    return [...properties].sort((a, b) => {
       switch (sortBy) {
         case 'priceLow':
           return a.rent - b.rent
@@ -136,7 +176,7 @@ function SmartSearchPage() {
           return 0
       }
     })
-  }, [sortBy, showRecentlyViewed])
+  }, [filters, sortBy, showRecentlyViewed])
 
   return (
     <div className="space-y-6">
@@ -209,23 +249,46 @@ function SmartSearchPage() {
             </select>
           </div>
 
+          {/* Compare Selected Button */}
+          {compareIds.length > 0 && (
+            <button
+              type="button"
+              onClick={() => navigate('/student/comparison', { state: { compareIds } })}
+              className="inline-flex items-center gap-1.5 rounded-control border border-primary/30 bg-primary-soft px-3 py-1.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/20"
+            >
+              <Scale size={14} />
+              <span>Compare ({compareIds.length})</span>
+            </button>
+          )}
+
           {/* Recently Viewed */}
           <button
             type="button"
-            onClick={() => setShowRecentlyViewed((prev) => !prev)}
+            onClick={() => navigate('/student/recently-viewed')}
             className="flex items-center gap-1 text-xs font-semibold text-primary transition-colors hover:text-primary-dark hover:underline"
           >
-            <span>
-              {showRecentlyViewed
-                ? 'Show All Properties'
-                : 'Recently Viewed (3)'}
-            </span>
-
+            <span>Recently Viewed</span>
             <ChevronRight size={14} />
           </button>
 
         </div>
       </div>
+
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div
+          className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-lg px-4 py-3 text-xs font-semibold text-white shadow-xl animate-fade-in ${
+            toastMessage.isError ? 'bg-danger' : 'bg-ink'
+          }`}
+        >
+          {toastMessage.isError ? (
+            <AlertCircle size={16} className="text-white" />
+          ) : (
+            <CheckCircle2 size={16} className="text-primary" />
+          )}
+          <span>{toastMessage.text}</span>
+        </div>
+      )}
 
       {/* Property Cards */}
       {displayedAccommodations.length > 0 ? (
@@ -236,8 +299,11 @@ function SmartSearchPage() {
             <AccommodationCard
               key={property.id}
               property={property}
-              isFavorite={favorites.has(property.id)}
+              isFavorite={favorites.includes(property.id)}
               onToggleFavorite={handleToggleFavorite}
+              isCompared={compareIds.includes(property.id)}
+              onToggleCompare={handleToggleCompare}
+              showCompare={true}
               onViewDetails={(prop) => {
                 navigate(`/student/property-details/${prop.id}`, {
                   state: { property: prop, filters },

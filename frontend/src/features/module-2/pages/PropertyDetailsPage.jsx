@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useParams, useNavigate, useLocation, Link } from 'react-router-dom'
 import {
   MapPin,
@@ -34,6 +34,13 @@ import {
   AlertCircle,
 } from 'lucide-react'
 import { sampleAccommodations } from '../data/sampleAccommodations'
+import {
+  recordPropertyView,
+  getCompareIds,
+  toggleCompareId,
+  getFavorites,
+  toggleFavorite,
+} from '../utils/storageService'
 
 function PropertyDetailsPage() {
   const { id } = useParams()
@@ -52,9 +59,16 @@ function PropertyDetailsPage() {
     return sampleAccommodations[0]
   }, [id, location.state])
 
-  // UI state
-  const [isSaved, setIsSaved] = useState(false)
-  const [isCompared, setIsCompared] = useState(false)
+  // Automatically record view in history
+  useEffect(() => {
+    if (property?.id) {
+      recordPropertyView(property.id)
+    }
+  }, [property?.id])
+
+  // UI state synchronized with storage
+  const [isSaved, setIsSaved] = useState(() => getFavorites().includes(property?.id))
+  const [isCompared, setIsCompared] = useState(() => getCompareIds().includes(property?.id))
   const [phoneRevealed, setPhoneRevealed] = useState(false)
   const [selectedRoomId, setSelectedRoomId] = useState(
     property.roomOptions?.[0]?.id || 'rm-1'
@@ -64,6 +78,16 @@ function PropertyDetailsPage() {
   const [bookingModalOpen, setBookingModalOpen] = useState(false)
   const [viewingModalOpen, setViewingModalOpen] = useState(false)
   const [actionToast, setActionToast] = useState(null)
+
+  // Listen to cross-component storage updates
+  useEffect(() => {
+    const handleStorageUpdate = () => {
+      setIsSaved(getFavorites().includes(property?.id))
+      setIsCompared(getCompareIds().includes(property?.id))
+    }
+    window.addEventListener('boardmate_storage_update', handleStorageUpdate)
+    return () => window.removeEventListener('boardmate_storage_update', handleStorageUpdate)
+  }, [property?.id])
 
   // Show temporary toast message
   const triggerToast = (msg) => {
@@ -85,19 +109,26 @@ function PropertyDetailsPage() {
 
   // Handle Compare toggle
   const handleToggleCompare = () => {
-    setIsCompared(!isCompared)
-    triggerToast(
-      !isCompared
-        ? `${property.title} added to comparison list`
-        : `${property.title} removed from comparison`
-    )
+    const res = toggleCompareId(property.id)
+    if (res.success) {
+      setIsCompared(getCompareIds().includes(property.id))
+      triggerToast(
+        res.action === 'removed'
+          ? `${property.title} removed from comparison`
+          : `${property.title} added to comparison list`
+      )
+    } else {
+      triggerToast(res.message)
+    }
   }
 
   // Handle Favorite toggle
   const handleToggleFavorite = () => {
-    setIsSaved(!isSaved)
+    const updated = toggleFavorite(property.id)
+    const saved = updated.includes(property.id)
+    setIsSaved(saved)
     triggerToast(
-      !isSaved
+      saved
         ? 'Saved to your favourite properties'
         : 'Removed from favourites'
     )

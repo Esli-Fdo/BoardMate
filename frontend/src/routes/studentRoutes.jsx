@@ -4,6 +4,11 @@ import SmartSearchPage from '../features/module-2/pages/SmartSearchPage'
 import SearchResultsPage from '../features/module-2/pages/SearchResultsPage'
 import PropertyDetailsPage from '../features/module-2/pages/PropertyDetailsPage'
 import PropertyMapViewPage from '../features/module-2/pages/PropertyMapViewPage'
+import PropertyComparisonPage from '../features/module-2/pages/PropertyComparisonPage'
+import SavedSearchesPage from '../features/module-2/pages/SavedSearchesPage'
+import RecentlyViewedPage from '../features/module-2/pages/RecentlyViewedPage'
+import MyPreferencesPage from '../features/module-2/pages/MyPreferencesPage'
+import MaintenanceRequestsPage from '../features/module-2/pages/MaintenanceRequestsPage'
 
 // Pages shown inside StudentLayout. Paths are relative to /student
 export const studentRoutes = [
@@ -16,10 +21,11 @@ export const studentRoutes = [
   { path: 'property-details', element: <PropertyDetailsPage /> },
   { path: 'map-view/:id', element: <PropertyMapViewPage /> },
   { path: 'map-view', element: <PropertyMapViewPage /> },
-  { path: 'comparison', element: <PagePlaceholder /> },
-  { path: 'saved-searches', element: <PagePlaceholder /> },
-  { path: 'recently-viewed', element: <PagePlaceholder /> },
-  { path: 'maintenance', element: <PagePlaceholder /> },
+  { path: 'comparison', element: <PropertyComparisonPage /> },
+  { path: 'saved-searches', element: <SavedSearchesPage /> },
+  { path: 'recently-viewed', element: <RecentlyViewedPage /> },
+  { path: 'preferences', element: <MyPreferencesPage /> },
+  { path: 'maintenance', element: <MaintenanceRequestsPage /> },
   { path: 'bookings', element: <PagePlaceholder /> },
   { path: 'payments', element: <PagePlaceholder /> },
   { path: 'messages', element: <PagePlaceholder /> },

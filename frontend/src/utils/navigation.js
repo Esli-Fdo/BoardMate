@@ -15,14 +15,26 @@ import {
   ShieldCheck,
   Flag,
   Settings,
+  SlidersHorizontal,
 } from 'lucide-react'
 
 export const studentMenu = [
   { label: 'Dashboard', to: '/student/dashboard', icon: LayoutDashboard },
-  { label: 'Properties', to: '/student/properties', icon: Building2 },
+  {
+    label: 'Properties',
+    to: '/student/properties',
+    icon: Building2,
+    aliases: [
+      '/student/properties',
+      '/student/property-details',
+      '/student/map-view',
+      '/student/search-results',
+    ],
+  },
   { label: 'Property Comparison', to: '/student/comparison', icon: Scale },
   { label: 'Saved Searches & Alerts', to: '/student/saved-searches', icon: Bookmark },
   { label: 'Recently Viewed', to: '/student/recently-viewed', icon: Clock },
+  { label: 'My Preferences', to: '/student/preferences', icon: SlidersHorizontal },
   { label: 'Maintenance Requests', to: '/student/maintenance', icon: Wrench },
   { label: 'Bookings', to: '/student/bookings', icon: CalendarDays },
   { label: 'Payments', to: '/student/payments', icon: CreditCard },
