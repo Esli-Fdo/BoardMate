@@ -30,6 +30,7 @@ import {
 } from '../utils/storageService'
 
 function PropertyComparisonPage() {
+  console.log('PropertyComparisonPage loaded');
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -122,12 +123,12 @@ function PropertyComparisonPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 md:py-6">
+
       {/* Toast Feedback */}
       {toastMessage && (
         <div
-          className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-lg px-4 py-3 text-xs font-semibold text-white shadow-xl animate-fade-in ${
-            toastMessage.isError ? 'bg-danger' : 'bg-ink'
-          }`}
+          className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-lg px-4 py-3 text-xs font-semibold text-white shadow-xl animate-fade-in ${toastMessage.isError ? 'bg-danger' : 'bg-ink'
+            }`}
         >
           {toastMessage.isError ? (
             <AlertCircle size={16} className="text-white" />
@@ -140,39 +141,21 @@ function PropertyComparisonPage() {
 
       {/* Breadcrumb Navigation */}
       <nav className="flex items-center gap-2 text-xs text-muted" aria-label="Breadcrumb">
-        <Link to="/student/properties" className="transition-colors hover:text-primary">
-          Accommodations
+        <Link to="/student/dashboard" className="transition-colors hover:text-primary">
+          Home
         </Link>
         <ChevronRight size={13} className="text-muted/60" />
-        <span className="font-medium text-ink">Comparison Tool</span>
+        <span className="font-medium text-ink">Property Comparison</span>
       </nav>
 
-      {/* Sub-nav Tabs matching Figma Screenshot */}
+      {/* Sub-nav Tabs */}
       <div className="mt-4 flex items-center gap-6 border-b border-line text-xs font-semibold">
-        <Link
-          to="/student/saved-searches"
-          className="pb-3 text-muted hover:text-ink transition-colors"
-        >
-          Favourites
-        </Link>
-        <Link
-          to="/student/saved-searches"
-          className="pb-3 text-muted hover:text-ink transition-colors"
-        >
-          Saved Searches
-        </Link>
         <button
           type="button"
           className="border-b-2 border-primary pb-3 text-primary font-bold transition-colors"
         >
           Compare Properties
         </button>
-        <Link
-          to="/student/profile"
-          className="pb-3 text-muted hover:text-ink transition-colors"
-        >
-          Preferences
-        </Link>
       </div>
 
       {/* Header Bar */}
@@ -622,11 +605,10 @@ function PropertyComparisonPage() {
                       type="button"
                       disabled={isAlreadyAdded}
                       onClick={() => handleAddProperty(acc.id)}
-                      className={`rounded-control px-3.5 py-1.5 text-xs font-semibold transition-colors shrink-0 ${
-                        isAlreadyAdded
+                      className={`rounded-control px-3.5 py-1.5 text-xs font-semibold transition-colors shrink-0 ${isAlreadyAdded
                           ? 'bg-line/60 text-muted cursor-not-allowed'
                           : 'bg-primary text-white hover:bg-primary-dark shadow-xs'
-                      }`}
+                        }`}
                     >
                       {isAlreadyAdded ? 'Added' : '+ Add to Compare'}
                     </button>

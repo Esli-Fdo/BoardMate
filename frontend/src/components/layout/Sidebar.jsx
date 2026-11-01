@@ -29,7 +29,7 @@ function Sidebar({ subtitle, sectionLabel, items, helpTo, helpLabel = 'Help Cent
   }
 
   return (
-    <aside className="flex h-full w-64 shrink-0 flex-col border-r border-line bg-white">
+    <aside className="flex h-screen w-64 shrink-0 flex-col overflow-hidden border-r border-line bg-white">
       <div className="flex items-center gap-3 p-4">
         <div className="flex h-10 w-10 items-center justify-center rounded-control bg-primary-soft text-primary">
           <Home size={20} />
@@ -55,11 +55,10 @@ function Sidebar({ subtitle, sectionLabel, items, helpTo, helpLabel = 'Help Cent
                   const active =
                     isItemActive(to, isActive) ||
                     (aliases && aliases.some((pattern) => currentPath.startsWith(pattern)))
-                  return `flex items-center justify-between rounded-control px-3 py-2.5 text-sm transition-colors ${
-                    active
+                  return `flex items-center justify-between rounded-control px-3 py-2.5 text-sm transition-colors ${active
                       ? 'bg-primary-soft font-medium text-primary'
                       : 'text-muted hover:bg-page hover:text-ink'
-                  }`
+                    }`
                 }}
               >
                 {({ isActive }) => {
@@ -90,10 +89,9 @@ function Sidebar({ subtitle, sectionLabel, items, helpTo, helpLabel = 'Help Cent
             <NavLink
               to={helpTo}
               className={({ isActive }) =>
-                `flex items-center gap-3 rounded-control px-3 py-2.5 text-sm transition-colors ${
-                  isActive
-                    ? 'bg-primary-soft font-medium text-primary'
-                    : 'text-muted hover:bg-page hover:text-ink'
+                `flex items-center gap-3 rounded-control px-3 py-2.5 text-sm transition-colors ${isActive
+                  ? 'bg-primary-soft font-medium text-primary'
+                  : 'text-muted hover:bg-page hover:text-ink'
                 }`
               }
             >

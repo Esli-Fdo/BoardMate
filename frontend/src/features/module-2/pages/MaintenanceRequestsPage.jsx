@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
+import { Link } from 'react-router-dom'
 import {
   ChevronRight,
   Plus,
@@ -287,9 +288,11 @@ function MaintenanceRequestsPage() {
         </div>
       )}
 
-      {/* Breadcrumb Navigation matching Figma Screenshot 5 */}
+      {/* Breadcrumb Navigation */}
       <nav className="flex items-center gap-2 text-xs text-muted" aria-label="Breadcrumb">
-        <span className="text-muted">Reviews & Reports</span>
+        <Link to="/student/dashboard" className="transition-colors hover:text-primary">
+          Home
+        </Link>
         <ChevronRight size={13} className="text-muted/60" />
         <span className="font-medium text-ink">Maintenance Requests</span>
       </nav>

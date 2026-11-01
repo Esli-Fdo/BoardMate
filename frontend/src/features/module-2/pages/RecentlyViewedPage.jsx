@@ -190,11 +190,9 @@ function RecentlyViewedPage() {
 
       {/* Breadcrumb Navigation */}
       <nav className="flex items-center gap-2 text-xs text-muted" aria-label="Breadcrumb">
-        <Link to="/student/properties" className="transition-colors hover:text-primary">
+        <Link to="/student/dashboard" className="transition-colors hover:text-primary">
           Home
         </Link>
-        <ChevronRight size={13} className="text-muted/60" />
-        <span className="text-muted">My Activity</span>
         <ChevronRight size={13} className="text-muted/60" />
         <span className="font-medium text-ink">Recently Viewed</span>
       </nav>

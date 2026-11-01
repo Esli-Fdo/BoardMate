@@ -75,6 +75,7 @@ function PropertyDetailsPage() {
   )
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState(0)
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [bookingModalOpen, setBookingModalOpen] = useState(false)
   const [viewingModalOpen, setViewingModalOpen] = useState(false)
   const [actionToast, setActionToast] = useState(null)
@@ -155,17 +156,21 @@ function PropertyDetailsPage() {
     'Purified Water': <Droplets size={18} className="text-primary" />,
   }
 
-  // Gallery images with fallback
-  const galleryImages =
-    property.gallery && property.gallery.length > 0
-      ? property.gallery
-      : [
-          property.image,
-          'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=800&q=80',
-          'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80',
-          'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80',
-          'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=800&q=80',
-        ]
+  // Gallery images – prefer gallery array, then single image field, then imageUrl
+  const galleryImages = (() => {
+    if (Array.isArray(property.gallery) && property.gallery.length > 0) {
+      return property.gallery.filter(Boolean);
+    }
+    if (Array.isArray(property.images) && property.images.length > 0) {
+      return property.images.filter(Boolean);
+    }
+    if (property.imageUrl) return [property.imageUrl];
+    if (property.image) return [property.image];
+    return [];
+  })();
+
+  const FALLBACK_IMG =
+    'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=800&q=80';
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 md:py-6">
@@ -317,107 +322,123 @@ function PropertyDetailsPage() {
         {/* Main Large Image (Left, spans 2 cols and 2 rows) */}
         <div
           onClick={() => {
-            setLightboxIndex(0)
+            setLightboxIndex(selectedImageIndex)
             setLightboxOpen(true)
           }}
           className="group relative cursor-pointer overflow-hidden bg-warm md:col-span-2 md:row-span-2"
         >
           <img
-            src={galleryImages[0]}
+            src={galleryImages[selectedImageIndex] || FALLBACK_IMG}
             alt={`${property.title} main view`}
+            onError={(e) => { e.currentTarget.src = FALLBACK_IMG }}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
           <div className="absolute bottom-4 left-4 right-4">
             <span className="inline-block rounded-md bg-black/60 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-xs">
-              Deluxe Study Suite
+              {property.title}
             </span>
             <p className="mt-1 text-xs text-white/90 drop-shadow-sm">
-              Natural daylight, ergonomic desk & storage
+              {property.area || property.location}
             </p>
           </div>
         </div>
 
-        {/* Small Image 1: Single Bedroom */}
-        <div
-          onClick={() => {
-            setLightboxIndex(1)
-            setLightboxOpen(true)
-          }}
-          className="group relative hidden cursor-pointer overflow-hidden bg-warm md:block"
-        >
-          <img
-            src={galleryImages[1]}
-            alt={`${property.title} single bedroom`}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-          <div className="absolute bottom-2.5 left-2.5">
-            <span className="rounded-md bg-black/60 px-2 py-0.5 text-[11px] font-medium text-white backdrop-blur-xs">
-              Single Bedroom
-            </span>
+        {/* Small Thumbnail 1 */}
+        {galleryImages[1] && (
+          <div
+            onClick={() => {
+              setSelectedImageIndex(1)
+              setLightboxIndex(1)
+              setLightboxOpen(true)
+            }}
+            className="group relative hidden cursor-pointer overflow-hidden bg-warm md:block"
+          >
+            <img
+              src={galleryImages[1]}
+              alt={`${property.title} view 2`}
+              onError={(e) => { e.currentTarget.src = FALLBACK_IMG }}
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            <div className="absolute bottom-2.5 left-2.5">
+              <span className="rounded-md bg-black/60 px-2 py-0.5 text-[11px] font-medium text-white backdrop-blur-xs">
+                Single Bedroom
+              </span>
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Small Image 2: Shared Kitchen */}
-        <div
-          onClick={() => {
-            setLightboxIndex(2)
-            setLightboxOpen(true)
-          }}
-          className="group relative hidden cursor-pointer overflow-hidden bg-warm md:block"
-        >
-          <img
-            src={galleryImages[2]}
-            alt={`${property.title} kitchen`}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-          <div className="absolute bottom-2.5 left-2.5">
-            <span className="rounded-md bg-black/60 px-2 py-0.5 text-[11px] font-medium text-white backdrop-blur-xs">
-              Shared Kitchen
-            </span>
+        {/* Small Thumbnail 2 */}
+        {galleryImages[2] && (
+          <div
+            onClick={() => {
+              setSelectedImageIndex(2)
+              setLightboxIndex(2)
+              setLightboxOpen(true)
+            }}
+            className="group relative hidden cursor-pointer overflow-hidden bg-warm md:block"
+          >
+            <img
+              src={galleryImages[2]}
+              alt={`${property.title} view 3`}
+              onError={(e) => { e.currentTarget.src = FALLBACK_IMG }}
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            <div className="absolute bottom-2.5 left-2.5">
+              <span className="rounded-md bg-black/60 px-2 py-0.5 text-[11px] font-medium text-white backdrop-blur-xs">
+                Shared Kitchen
+              </span>
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Small Image 3: Modern Bath */}
-        <div
-          onClick={() => {
-            setLightboxIndex(3)
-            setLightboxOpen(true)
-          }}
-          className="group relative hidden cursor-pointer overflow-hidden bg-warm md:block"
-        >
-          <img
-            src={galleryImages[3]}
-            alt={`${property.title} bathroom`}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-          <div className="absolute bottom-2.5 left-2.5">
-            <span className="rounded-md bg-black/60 px-2 py-0.5 text-[11px] font-medium text-white backdrop-blur-xs">
-              Modern Bath
-            </span>
+        {/* Small Thumbnail 3 */}
+        {galleryImages[3] && (
+          <div
+            onClick={() => {
+              setSelectedImageIndex(3)
+              setLightboxIndex(3)
+              setLightboxOpen(true)
+            }}
+            className="group relative hidden cursor-pointer overflow-hidden bg-warm md:block"
+          >
+            <img
+              src={galleryImages[3]}
+              alt={`${property.title} view 4`}
+              onError={(e) => { e.currentTarget.src = FALLBACK_IMG }}
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            <div className="absolute bottom-2.5 left-2.5">
+              <span className="rounded-md bg-black/60 px-2 py-0.5 text-[11px] font-medium text-white backdrop-blur-xs">
+                Modern Bath
+              </span>
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Small Image 4: View All Photos overlay */}
-        <div
-          onClick={() => {
-            setLightboxIndex(0)
-            setLightboxOpen(true)
-          }}
-          className="group relative hidden cursor-pointer overflow-hidden bg-warm md:block"
-        >
-          <img
-            src={galleryImages[4]}
-            alt={`${property.title} common study room`}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 transition-colors group-hover:bg-black/60">
-            <Eye size={22} className="text-white" />
-            <span className="mt-1.5 text-xs font-bold text-white">
-              View All 16 Photos
-            </span>
+        {/* Small Thumbnail 4 – View All overlay */}
+        {galleryImages[4] && (
+          <div
+            onClick={() => {
+              setLightboxIndex(0)
+              setLightboxOpen(true)
+            }}
+            className="group relative hidden cursor-pointer overflow-hidden bg-warm md:block"
+          >
+            <img
+              src={galleryImages[4]}
+              alt={`${property.title} view 5`}
+              onError={(e) => { e.currentTarget.src = FALLBACK_IMG }}
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 transition-colors group-hover:bg-black/60">
+              <Eye size={22} className="text-white" />
+              <span className="mt-1.5 text-xs font-bold text-white">
+                View All {galleryImages.length} Photos
+              </span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Main Two-Column Layout (Vertically Arranged Content Sections) */}
@@ -879,7 +900,7 @@ function PropertyDetailsPage() {
         {/* Right Sticky Sidebar (4 columns on desktop) */}
         <div className="space-y-6 lg:col-span-4">
           {/* Card 1: Pricing & Booking Action */}
-          <div className="sticky top-20 space-y-6">
+          <div className="space-y-6">
             <div className="rounded-card border border-line bg-white p-6 shadow-card">
               <div className="flex items-start justify-between">
                 <div>

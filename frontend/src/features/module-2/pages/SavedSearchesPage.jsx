@@ -163,7 +163,7 @@ function SavedSearchesPage() {
         </span>
       </nav>
 
-      {/* Sub-nav Tabs matching Figma Screenshots */}
+      {/* Sub-nav Tabs */}
       <div className="mt-4 flex items-center gap-6 border-b border-line text-xs font-semibold">
         <button
           type="button"
@@ -190,20 +190,6 @@ function SavedSearchesPage() {
           <Bookmark size={14} className={activeTab === 'saved-searches' ? 'fill-primary' : ''} />
           <span>Saved Searches ({savedSearches.length})</span>
         </button>
-
-        <Link
-          to="/student/comparison"
-          className="pb-3 text-muted hover:text-ink transition-colors"
-        >
-          Compare Properties
-        </Link>
-
-        <Link
-          to="/student/profile"
-          className="pb-3 text-muted hover:text-ink transition-colors"
-        >
-          Preferences
-        </Link>
       </div>
 
       {/* Content depending on Active Tab */}

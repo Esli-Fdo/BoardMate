@@ -2,9 +2,6 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   ChevronRight,
-  Heart,
-  Bookmark,
-  Scale,
   CheckCircle2,
   SlidersHorizontal,
   Sparkles,
@@ -44,9 +41,9 @@ function MyPreferencesPage() {
 
   const [toastMessage, setToastMessage] = useState(null)
 
-  const triggerToast = (msg) => {
-    setToastMessage(msg)
-    setTimeout(() => setToastMessage(null), 3500)
+  const triggerToast = (msg, isError = false) => {
+    setToastMessage({ text: msg, isError });
+    setTimeout(() => setToastMessage(null), 3500);
   }
 
   // Handle room type selection
@@ -73,19 +70,29 @@ function MyPreferencesPage() {
 
   // Save preferences
   const handleSave = (e) => {
-    e?.preventDefault()
+    e?.preventDefault();
+    // Validate rent range
+    if (preferences.minRent > preferences.maxRent) {
+      triggerToast('Minimum rent cannot exceed maximum rent.', true);
+      return;
+    }
+    if (preferences.minRent < 0 || preferences.maxRent < 0) {
+      triggerToast('Rent values must be non‑negative.', true);
+      return;
+    }
     try {
-      localStorage.setItem('boardmate_user_preferences', JSON.stringify(preferences))
+      localStorage.setItem('boardmate_user_preferences', JSON.stringify(preferences));
       window.dispatchEvent(
         new CustomEvent('boardmate_storage_update', {
           detail: { key: 'boardmate_user_preferences', value: preferences },
         })
-      )
-      triggerToast('Accommodation preferences saved successfully!')
+      );
+      triggerToast('Accommodation preferences saved successfully!');
     } catch {
-      triggerToast('Failed to save preferences to local storage.')
+      triggerToast('Failed to save preferences to local storage.');
     }
   }
+
 
   // Reset preferences
   const handleReset = () => {
@@ -145,32 +152,8 @@ function MyPreferencesPage() {
         <span className="font-medium text-ink">My Preferences</span>
       </nav>
 
-      {/* Sub-nav Tabs matching Figma Screenshot 2 */}
+      {/* Sub-nav Tabs */}
       <div className="mt-4 flex items-center gap-6 border-b border-line text-xs font-semibold">
-        <Link
-          to="/student/saved-searches?tab=favourites"
-          className="flex items-center gap-1.5 pb-3 text-muted hover:text-ink transition-colors"
-        >
-          <Heart size={14} />
-          <span>Favourites</span>
-        </Link>
-
-        <Link
-          to="/student/saved-searches"
-          className="flex items-center gap-1.5 pb-3 text-muted hover:text-ink transition-colors"
-        >
-          <Bookmark size={14} />
-          <span>Saved Searches</span>
-        </Link>
-
-        <Link
-          to="/student/comparison"
-          className="flex items-center gap-1.5 pb-3 text-muted hover:text-ink transition-colors"
-        >
-          <Scale size={14} />
-          <span>Compare Properties</span>
-        </Link>
-
         <button
           type="button"
           className="flex items-center gap-1.5 border-b-2 border-primary pb-3 text-primary font-bold transition-colors"
