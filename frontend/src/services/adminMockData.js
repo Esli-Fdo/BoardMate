@@ -316,3 +316,115 @@ export const propertiesList = [
   },
 ]
 
+export const bookingsList = [
+  {
+    id: '#BK-9021',
+    name: 'Piyu Hansi',
+    date: '15 May 2025',
+    status: 'Confirmed',
+  },
+  {
+    id: '#BK-9022',
+    name: 'Kasun Wijesinghe',
+    date: '14 May 2025',
+    status: 'Pending',
+  },
+  {
+    id: '#BK-9023',
+    name: 'Nadeeka Silva',
+    date: '12 May 2025',
+    status: 'Confirmed',
+  },
+  {
+    id: '#BK-9024',
+    name: 'Dinuka Silva',
+    date: '10 May 2025',
+    status: 'Cancelled',
+  },
+  {
+    id: '#BK-9025',
+    name: 'Vimukthi Jayasinghe',
+    date: '08 May 2025',
+    status: 'Completed',
+  },
+  {
+    id: '#BK-9026',
+    name: 'Tharushi Perera',
+    date: '05 May 2025',
+    status: 'Confirmed',
+  },
+  {
+    id: '#BK-9027',
+    name: 'Alex Fernando',
+    date: '02 May 2025',
+    status: 'Pending',
+  },
+  {
+    id: '#BK-9028',
+    name: 'Nimal Silva',
+    date: '28 Apr 2025',
+    status: 'Completed',
+  },
+  {
+    id: '#BK-9029',
+    name: 'Anuki Kaluarachchi',
+    date: '25 Apr 2025',
+    status: 'Confirmed',
+  },
+  {
+    id: '#BK-9030',
+    name: 'Saman Kumara',
+    date: '22 Apr 2025',
+    status: 'Completed',
+  },
+  {
+    id: '#BK-9031',
+    name: 'Kaveen Senanayake',
+    date: '18 Apr 2025',
+    status: 'Cancelled',
+  },
+  {
+    id: '#BK-9032',
+    name: 'Ruwan Perera',
+    date: '15 Apr 2025',
+    status: 'Confirmed',
+  },
+  {
+    id: '#BK-9033',
+    name: 'Kavindu Jayasinghe',
+    date: '12 Apr 2025',
+    status: 'Pending',
+  },
+  {
+    id: '#BK-9034',
+    name: 'Malini Fernando',
+    date: '10 Apr 2025',
+    status: 'Confirmed',
+  },
+  {
+    id: '#BK-9035',
+    name: 'Chathura Bandara',
+    date: '05 Apr 2025',
+    status: 'Completed',
+  },
+  {
+    id: '#BK-9036',
+    name: 'Priyanka Perera',
+    date: '01 Apr 2025',
+    status: 'Confirmed',
+  },
+  {
+    id: '#BK-9037',
+    name: 'Sunil Jayasinghe',
+    date: '28 Mar 2025',
+    status: 'Completed',
+  },
+  {
+    id: '#BK-9038',
+    name: 'Dayani Ranasinghe',
+    date: '25 Mar 2025',
+    status: 'Pending',
+  },
+]
+
+
