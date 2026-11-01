@@ -1,17 +1,24 @@
 import { Bell, Search, User } from 'lucide-react'
 import Input from '../common/Input'
 
-function TopBar({ user, searchPlaceholder = 'Search...', hasNotifications = false }) {
+function TopBar({
+  user,
+  searchPlaceholder = 'Search...',
+  hasNotifications = false,
+  showSearch = true,
+}) {
   return (
     <header className="flex h-16 shrink-0 items-center justify-between gap-4 border-b border-line bg-white px-6">
-      <Input
-        className="w-full max-w-md"
-        leftIcon={Search}
-        placeholder={searchPlaceholder}
-        aria-label="Search"
-      />
+      {showSearch && (
+        <Input
+          className="w-full max-w-md"
+          leftIcon={Search}
+          placeholder={searchPlaceholder}
+          aria-label="Search"
+        />
+      )}
 
-      <div className="flex items-center gap-5">
+      <div className="ml-auto flex items-center gap-5">
         <button
           type="button"
           aria-label="Notifications"
