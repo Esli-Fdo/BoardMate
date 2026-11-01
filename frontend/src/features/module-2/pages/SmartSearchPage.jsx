@@ -49,7 +49,9 @@ const defaultResetFilters = {
 function SmartSearchPage() {
   const navigate = useNavigate()
 
-  const [filters, setFilters] = useState(initialFilters)
+  const [draftFilters, setDraftFilters] = useState(initialFilters)
+  // filters actually applied after clicking Search
+  const [appliedFilters, setAppliedFilters] = useState(null) // null means show all
   const [sortBy, setSortBy] = useState('recommended')
   const [favorites, setFavorites] = useState(getFavorites)
   const [compareIds, setCompareIds] = useState(getCompareIds)
@@ -77,45 +79,41 @@ function SmartSearchPage() {
 
   // Handle filter changes
   const handleFilterChange = (field, value) => {
-    setFilters((prev) => ({
-      ...prev,
-      [field]: value,
-    }))
-    setShowRecentlyViewed(false)
+    setDraftFilters((prev) => ({ ...prev, [field]: value }));
+    setShowRecentlyViewed(false);
   }
+
 
   // Handle facility selection
   const handleFacilityToggle = (facilityLabel) => {
-    setFilters((prev) => {
-      const exists = prev.facilities.includes(facilityLabel)
-
+    setDraftFilters((prev) => {
+      const exists = prev.facilities.includes(facilityLabel);
       const updatedFacilities = exists
         ? prev.facilities.filter((facility) => facility !== facilityLabel)
-        : [...prev.facilities, facilityLabel]
-
-      return {
-        ...prev,
-        facilities: updatedFacilities,
-      }
-    })
-
-    setShowRecentlyViewed(false)
+        : [...(prev.facilities || []), facilityLabel];
+      return { ...prev, facilities: updatedFacilities };
+    });
+    setShowRecentlyViewed(false);
   }
+
 
   // Reset all filters
   const handleResetFilters = () => {
-    setFilters(defaultResetFilters)
-    setShowRecentlyViewed(false)
+    setDraftFilters(defaultResetFilters);
+    setShowRecentlyViewed(false);
   }
 
   // Navigate to Search Results with selected filters
   const handleSearch = () => {
+    // Apply draft filters and navigate
+    setAppliedFilters(draftFilters);
     navigate('/student/search-results', {
       state: {
-        filters: { ...filters },
+        filters: { ...draftFilters },
       },
-    })
+    });
   }
+
 
   // Handle favourite properties
   const handleToggleFavorite = (propertyId) => {
@@ -145,38 +143,44 @@ function SmartSearchPage() {
 
   // Filter accommodations according to user's selections
   const displayedAccommodations = useMemo(() => {
-    let properties = filterAccommodations(sampleAccommodations, filters)
+    let properties;
+    if (appliedFilters) {
+      properties = filterAccommodations(sampleAccommodations, appliedFilters);
+    } else {
+      properties = sampleAccommodations;
+    }
 
     // Demo recently viewed section toggle
     if (showRecentlyViewed) {
-      properties = properties.slice(0, 3)
+      properties = properties.slice(0, 3);
     }
 
     // Keep original order when Default Order is selected
     if (sortBy === 'recommended') {
-      return properties
+      return properties;
     }
 
     // Sort properties according to selected option
     return [...properties].sort((a, b) => {
       switch (sortBy) {
         case 'priceLow':
-          return a.rent - b.rent
+          return a.rent - b.rent;
 
         case 'priceHigh':
-          return b.rent - a.rent
+          return b.rent - a.rent;
 
         case 'distance':
-          return a.distance - b.distance
+          return a.distance - b.distance;
 
         case 'rating':
-          return b.rating - a.rating
+          return b.rating - a.rating;
 
         default:
-          return 0
+          return 0;
       }
-    })
-  }, [filters, sortBy, showRecentlyViewed])
+    });
+  }, [appliedFilters, sortBy, showRecentlyViewed]);
+
 
   return (
     <div className="space-y-6">
@@ -210,13 +214,14 @@ function SmartSearchPage() {
 
       {/* Smart Search Filters */}
       <FilterSection
-        filters={filters}
+        filters={draftFilters}
         onFilterChange={handleFilterChange}
         onFacilityToggle={handleFacilityToggle}
         onResetFilters={handleResetFilters}
         onSearch={handleSearch}
         resultsCount={sampleAccommodations.length}
       />
+
 
       {/* Properties Heading and Sorting */}
       <div className="flex flex-wrap items-center justify-between gap-4 pt-4">
@@ -277,9 +282,8 @@ function SmartSearchPage() {
       {/* Toast Notification */}
       {toastMessage && (
         <div
-          className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-lg px-4 py-3 text-xs font-semibold text-white shadow-xl animate-fade-in ${
-            toastMessage.isError ? 'bg-danger' : 'bg-ink'
-          }`}
+          className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-lg px-4 py-3 text-xs font-semibold text-white shadow-xl animate-fade-in ${toastMessage.isError ? 'bg-danger' : 'bg-ink'
+            }`}
         >
           {toastMessage.isError ? (
             <AlertCircle size={16} className="text-white" />
@@ -290,11 +294,9 @@ function SmartSearchPage() {
         </div>
       )}
 
-      {/* Property Cards */}
+
       {displayedAccommodations.length > 0 ? (
-
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-
           {displayedAccommodations.map((property) => (
             <AccommodationCard
               key={property.id}
@@ -306,16 +308,13 @@ function SmartSearchPage() {
               showCompare={true}
               onViewDetails={(prop) => {
                 navigate(`/student/property-details/${prop.id}`, {
-                  state: { property: prop, filters },
-                })
+                  state: { property: prop, filters: appliedFilters },
+                });
               }}
             />
           ))}
-
         </div>
-
       ) : (
-
         /* Empty State */
         <div className="flex flex-col items-center justify-center rounded-card border border-dashed border-line bg-white p-12 text-center shadow-card">
 

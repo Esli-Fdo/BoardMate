@@ -20,7 +20,6 @@ import {
   Bike,
   Sun,
   Droplets,
-  Wind,
 } from 'lucide-react'
 import { sampleAccommodations } from '../data/sampleAccommodations'
 import {

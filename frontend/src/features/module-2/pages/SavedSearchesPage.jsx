@@ -14,7 +14,6 @@ import {
   MapPin,
   GraduationCap,
   Heart,
-  SlidersHorizontal,
   X,
   Search,
 } from 'lucide-react'

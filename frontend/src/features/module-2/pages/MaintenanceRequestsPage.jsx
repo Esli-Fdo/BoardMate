@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Link } from 'react-router-dom'
 import {
   ChevronRight,
   Plus,
@@ -8,7 +7,6 @@ import {
   CheckCircle2,
   Shield,
   Phone,
-  Eye,
   X,
   Upload,
   Building2,

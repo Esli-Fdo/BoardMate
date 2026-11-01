@@ -13,7 +13,6 @@ import {
   CheckCircle2,
   Sparkles,
   RotateCcw,
-  SlidersHorizontal,
   X,
 } from 'lucide-react'
 import { sampleAccommodations } from '../data/sampleAccommodations'
